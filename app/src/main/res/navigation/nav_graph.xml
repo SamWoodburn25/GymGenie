@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/HomeFragment">
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="edu.quinnipiac.ser210.myapplication.HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_HomeFragment_to_SavedWorkoutsFragment"
+            app:destination="@id/SavedWorkoutsFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_InformationFragment"
+            app:destination="@id/InformationFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_AllWorkoutsFragment"
+            app:destination="@id/AllWorkoutsFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/AllWorkoutsFragment"
+        android:name="edu.quinnipiac.ser210.myapplication.AllWorkoutsFragment"
+        tools:layout="@layout/fragment_all_workouts">
+        <action
+            android:id="@+id/action_AllWorkoutsFragment_to_SavedWorkoutsFragment"
+            app:destination="@id/SavedWorkoutsFragment" />
+        <action
+            android:id="@+id/action_AllWorkoutsFragment_to_InformationFragment"
+            app:destination="@id/InformationFragment" />
+        <argument
+            android:name="bodyPart"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SavedWorkoutsFragment"
+        android:name="edu.quinnipiac.ser210.myapplication.SavedWorkoutsFragment"
+        tools:layout="@layout/fragment_saved_workouts"/>
+
+    <fragment
+        android:id="@+id/InformationFragment"
+        android:name="edu.quinnipiac.ser210.myapplication.InformationFragment"
+        tools:layout="@layout/fragment_information"/>
+
+
+</navigation>
+
