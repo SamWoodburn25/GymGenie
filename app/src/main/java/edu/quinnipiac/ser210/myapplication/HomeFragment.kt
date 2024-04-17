@@ -6,11 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import edu.quinnipiac.ser210.myapplication.R
 import edu.quinnipiac.ser210.myapplication.databinding.FragmentHomeBinding
+import retrofit2.Call
+import retrofit2.Response
 
 class HomeFragment : Fragment() {
 
@@ -23,11 +27,13 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = findNavController()
 
-        val bodyParts = arrayOf("Head", "Arm", "Leg", "Chest")
+        val bodyParts = arrayOf("Back", "Chest", "Shoulders", "Legs", "Arms", "Core")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, bodyParts)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.bodyPartSpinner.adapter = adapter
@@ -46,12 +52,28 @@ class HomeFragment : Fragment() {
 //        }
 
     }
-
     private fun makeApiCall(bodyPart: String) {
-        // Here, insert your API call logic using Retrofit, Volley, or another HTTP library
-        // Example:
-        // ApiService.create().getBodyPartData(bodyPart).enqueue(/* Your callback here */)
+        ApiClient.service.getExercisesByBodyPart(bodyPart).enqueue(object : retrofit2.Callback<List<Exercise>> {
+            override fun onResponse(call: Call<List<Exercise>>, response: Response<List<Exercise>>) {
+                if (response.isSuccessful) {
+                    val workouts = response.body() ?: emptyList()
+                    displayWorkouts(workouts)
+                } else {
+                    //handle failure
+                }
+            }
+
+            override fun onFailure(call: Call<List<Exercise>>, t: Throwable) {
+                // Handle the failure
+            }
+        })
     }
+    @Composable
+    private fun displayWorkouts(workouts: List<Exercise>) {
+        viewModel.selectWorkouts(workouts)
+    }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
