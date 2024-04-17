@@ -1,10 +1,15 @@
 package edu.quinnipiac.ser210.myapplication
+/*
+  * Gabby Pierce and Sam Woodburn
+  * Final Project SER210
+  * Gym Genie
+  * Main activity
+ */
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import edu.quinnipiac.ser210.myapplication.R
 
 class MainActivity : AppCompatActivity() {
 

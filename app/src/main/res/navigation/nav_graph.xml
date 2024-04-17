@@ -11,14 +11,14 @@
         android:name="edu.quinnipiac.ser210.myapplication.HomeFragment"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_HomeFragment_to_AllWorkoutsFragment"
-            app:destination="@id/AllWorkoutsFragment" />
-        <action
             android:id="@+id/action_HomeFragment_to_SavedWorkoutsFragment"
             app:destination="@id/SavedWorkoutsFragment" />
         <action
             android:id="@+id/action_HomeFragment_to_InformationFragment"
-            app:destination="@+id/InformationFragment" />
+            app:destination="@id/InformationFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_AllWorkoutsFragment"
+            app:destination="@id/AllWorkoutsFragment" />
     </fragment>
 
 
@@ -27,33 +27,25 @@
         android:name="edu.quinnipiac.ser210.myapplication.AllWorkoutsFragment"
         tools:layout="@layout/fragment_all_workouts">
         <action
-            android:id="@+id/action_AllWorkoutsFragment_to_HomeFragment"
-            app:destination="@id/HomeFragment" />
-        <action
             android:id="@+id/action_AllWorkoutsFragment_to_SavedWorkoutsFragment"
             app:destination="@id/SavedWorkoutsFragment" />
+        <action
+            android:id="@+id/action_AllWorkoutsFragment_to_InformationFragment"
+            app:destination="@id/InformationFragment" />
+        <argument
+            android:name="bodyPart"
+            app:argType="string" />
     </fragment>
 
     <fragment
         android:id="@+id/SavedWorkoutsFragment"
         android:name="edu.quinnipiac.ser210.myapplication.SavedWorkoutsFragment"
-        tools:layout="@layout/fragment_saved_workouts">
-        <action
-            android:id="@+id/action_SavedWorkoutsFragment_to_HomeFragment"
-            app:destination="@id/HomeFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_saved_workouts"/>
 
     <fragment
         android:id="@+id/InformationFragment"
         android:name="edu.quinnipiac.ser210.myapplication.InformationFragment"
-        tools:layout="@layout/fragment_information">
-        <action
-            android:id="@+id/action_InformationFragment_to_HomeFragment"
-            app:destination="@id/HomeFragment" />
-        <action
-            android:id="@+id/action_InformationFragment_to_SavedWorkoutsFragment"
-            app:destination="@id/SavedWorkoutsFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_information"/>
 
 
 </navigation>
