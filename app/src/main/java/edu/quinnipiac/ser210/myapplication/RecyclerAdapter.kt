@@ -1,41 +1,46 @@
 package edu.quinnipiac.ser210.myapplication
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import edu.quinnipiac.ser210.myapplication.APIData.ExerciseItem
+import edu.quinnipiac.ser210.myapplication.databinding.ListItemBinding
 
 //list of jobs variable, to be accessed by other classes
 lateinit var exerciseItemList: List<ExerciseItem>
-class RecyclerAdapter(var dataSet:  List<ExerciseItem>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+
+class RecyclerAdapter(private var dataSet: List<ExerciseItem>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     //view holder class
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        //text view variables
-        val textViewName: TextView = view.findViewById(R.id.exerciseName)
+    class ViewHolder(private val binding: ListItemBinding): RecyclerView.ViewHolder(binding.root) {
+
         fun bind(exercise: ExerciseItem) {
-            textViewName.text = "Exercise Name: "+exercise.name
+            binding.exerciseName.text = "Exercise Name: ${exercise.name}"
         }
+    }
+
+    fun getCurrentList(): List<ExerciseItem> {
+        return dataSet
     }
 
     //make view holder, list_item layout
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_item, parent, false)
-        //dataset parameter is equal to hitList
         exerciseItemList = dataSet
+        val binding = ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return ViewHolder(view)
+        return ViewHolder(binding)
+        //return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         //bind hit to holder
         val exercise = dataSet[position]
         holder.bind(exercise)
+
+        holder.bind(dataSet[position])
     }
 
     override fun getItemCount() = dataSet.size
@@ -43,23 +48,23 @@ class RecyclerAdapter(var dataSet:  List<ExerciseItem>) : RecyclerView.Adapter<R
 
     //load a list of Hit to the dataset variable
     fun submitList(newExercises: List<ExerciseItem>) {
-        //log to track the info
-        Log.d("RECYCLER_ADAPTER", "Submitting list with size: ${newExercises.size}")
         val diffCallback = object : DiffUtil.Callback() {
             override fun getOldListSize(): Int = dataSet.size
             override fun getNewListSize(): Int = newExercises.size
-            //check if the items or contents are the same
+
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return dataSet[oldItemPosition].id == newExercises[newItemPosition].id
+                // This depends on whether ExerciseItem has an ID or some unique property
+                // If it does not have a unique identifier, you may need to compare names or another field
+                return dataSet[oldItemPosition] == newExercises[newItemPosition]
             }
+
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                 return dataSet[oldItemPosition] == newExercises[newItemPosition]
             }
         }
+
         val diffResult = DiffUtil.calculateDiff(diffCallback)
-        //update dataset variable
         dataSet = newExercises
         diffResult.dispatchUpdatesTo(this)
     }
-
 }

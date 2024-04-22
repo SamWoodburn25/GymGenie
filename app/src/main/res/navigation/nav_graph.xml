@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_AllWorkoutsFragment_to_InformationFragment"
             app:destination="@id/InformationFragment" />
+        <action
+            android:id="@+id/action_AllWorkoutsFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
         <argument
             android:name="bodyPart"
             app:argType="string" />
@@ -40,7 +43,13 @@
     <fragment
         android:id="@+id/SavedWorkoutsFragment"
         android:name="edu.quinnipiac.ser210.myapplication.SavedWorkoutsFragment"
-        tools:layout="@layout/fragment_saved_workouts"/>
+        android:label="fragment_saved_workouts"
+        tools:layout="@layout/fragment_saved_workouts">
+        <argument
+            android:name="workoutName"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/InformationFragment"

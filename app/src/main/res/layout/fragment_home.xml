@@ -19,11 +19,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/saveWorkoutsButton"/>
+        app:layout_constraintBottom_toTopOf="@id/SavedWorkouts"/>
 
     <Button
-        android:id="@+id/saveWorkoutsButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/SavedWorkouts"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/save"
@@ -38,7 +38,7 @@
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:src="@drawable/genielogo"
-        app:layout_constraintTop_toBottomOf="@id/saveWorkoutsButton"
+        app:layout_constraintTop_toBottomOf="@id/SavedWorkouts"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

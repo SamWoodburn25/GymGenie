@@ -7,9 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import edu.quinnipiac.ser210.myapplication.databaseInfo.ExerciseInfo
+import edu.quinnipiac.ser210.myapplication.data.Workout
 
-class SavedWorkoutAdapter : ListAdapter<ExerciseInfo, SavedWorkoutAdapter.ViewHolder>(ExerciseComparator()) {
+class SavedWorkoutAdapter : ListAdapter<Workout, SavedWorkoutAdapter.ViewHolder>(ExerciseComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.create(parent)
@@ -17,7 +17,7 @@ class SavedWorkoutAdapter : ListAdapter<ExerciseInfo, SavedWorkoutAdapter.ViewHo
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.name)
+        holder.bind(current.exercises)
     }
 
 
@@ -37,13 +37,13 @@ class SavedWorkoutAdapter : ListAdapter<ExerciseInfo, SavedWorkoutAdapter.ViewHo
         }
     }
 
-    class ExerciseComparator: DiffUtil.ItemCallback<ExerciseInfo>() {
-        override fun areItemsTheSame(oldItem: ExerciseInfo, newItem: ExerciseInfo): Boolean {
+    class ExerciseComparator: DiffUtil.ItemCallback<Workout>() {
+        override fun areItemsTheSame(oldItem: Workout, newItem: Workout): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: ExerciseInfo, newItem: ExerciseInfo): Boolean {
-            return oldItem.name == newItem.name
+        override fun areContentsTheSame(oldItem: Workout, newItem: Workout): Boolean {
+            return oldItem.exercises == newItem.exercises
         }
 
     }

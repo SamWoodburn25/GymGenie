@@ -5,8 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import edu.quinnipiac.ser210.myapplication.APIData.ExerciseItem
-import edu.quinnipiac.ser210.myapplication.APIData.ExerciseRepository
+import edu.quinnipiac.ser210.myapplication.data.Workout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -18,6 +19,7 @@ import kotlinx.coroutines.withContext
   * Exercise view model: to monitor the live data changes to this list
  */
 
+
 class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel() {
     private val _allExerciseList = MutableLiveData<List<ExerciseItem>>()
     val allExerciseList: LiveData<List<ExerciseItem>> = _allExerciseList
@@ -28,6 +30,7 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
+
 
     fun getExercises(bodyPart: String) {
         _isLoading.value = true
@@ -51,4 +54,18 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
             }
         }
     }
+
+    fun saveWorkout(bodyPart: String, exercises: List<ExerciseItem>) {
+        viewModelScope.launch {
+            val gson = Gson()
+            val jsonExercises = gson.toJson(exercises)
+            val workout = Workout(bodyPart = bodyPart, exercises = jsonExercises)
+            repository.insertWorkout(workout)
+        }
+    }
+
+    fun getAllSavedWorkouts(): LiveData<List<Workout>> {
+        return repository.getAllSavedWorkouts()
+    }
+
 }
