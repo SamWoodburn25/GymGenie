@@ -8,6 +8,7 @@ package edu.quinnipiac.ser210.myapplication
  */
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,6 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import edu.quinnipiac.ser210.myapplication.R
 import edu.quinnipiac.ser210.myapplication.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -37,17 +37,20 @@ class HomeFragment : Fragment() {
         navController = findNavController()
         isFirstSelection = true
 
+
         val bodyParts = arrayOf("Back", "Arms", "Legs", "Chest", "Shoulders", "Core")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, bodyParts)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.bodyPartSpinner.adapter = adapter
         binding.bodyPartSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                Log.d("HomeFragment", "onItemSelected: position = $position")
                 if (isFirstSelection) {
                     isFirstSelection = false
                     return
                 }
                 val selectedBodyPart = parent.getItemAtPosition(position).toString()
+                Log.d("HomeFragment", "Selected body part: $selectedBodyPart")
                 val action = HomeFragmentDirections.actionHomeFragmentToAllWorkoutsFragment(selectedBodyPart)
                 findNavController().navigate(action)
             }
@@ -57,9 +60,9 @@ class HomeFragment : Fragment() {
             }
         }
 
-//        binding.buttonToSavedWorkouts.setOnClickListener {
-//            navController.navigate(R.id.action_HomeFragment_to_SavedWorkoutsFragment)
-//        }
+        binding.SavedWorkouts.setOnClickListener {
+            navController.navigate(R.id.action_HomeFragment_to_SavedWorkoutsFragment)
+        }
 
     }
 
