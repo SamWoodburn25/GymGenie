@@ -24,6 +24,13 @@
         android:textAppearance="?attr/textAppearanceListItem"
         android:textSize="25dp"/>
 
+    <TextView
+        android:id="@+id/reps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reps: "/>
+
+
 </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

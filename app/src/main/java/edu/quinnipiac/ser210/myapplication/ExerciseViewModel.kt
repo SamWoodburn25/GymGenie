@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import edu.quinnipiac.ser210.myapplication.APIData.ExerciseItem
-import edu.quinnipiac.ser210.myapplication.APIData.ExerciseJSON
+import edu.quinnipiac.ser210.myapplication.APIData.ExerciseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -16,40 +16,6 @@ import kotlinx.coroutines.withContext
   * Final Project SER210
   * Gym Genie
   * Exercise view model: to monitor the live data changes to this list
- */
-/*
-class ExerciseViewModel (private val repository: ExerciseRepository) : ViewModel() {
-    //live data variables
-    private val _allExerciseList = MutableLiveData<ExerciseJSON>()
-    var allExerciseList: LiveData<ExerciseJSON> = _allExerciseList
-
-    //calls the repository to fetch job listings
-    fun getExercises(bodyPart: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val response = repository.getExercises(bodyPart)
-                Log.d("VIEW_MODEL: ", "API call success")
-
-                // Switch to Main thread to update UI components
-                withContext(Dispatchers.Main) {
-                    if (response != null) {
-                        Log.d("VIEW_MODEL:", "Posting ${response.size} hits to LiveData")
-                        _allExerciseList.value = response
-                    } else {
-                        Log.d("VIEW_MODEL:", "No exercises found")
-                    }
-                }
-            } catch (e: Exception) {
-                Log.d("VIEW_MODEL", "API call failure: ${e.message}")
-                withContext(Dispatchers.Main) {
-                    _allExerciseList.value = listOf() // Posting empty list or handling error state
-                }
-            }
-        }
-    }
-
-}
-
  */
 
 class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel() {

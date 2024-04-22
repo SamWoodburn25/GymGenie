@@ -1,4 +1,4 @@
-package edu.quinnipiac.ser210.myapplication
+package edu.quinnipiac.ser210.myapplication.APIData
 /*
   * Gabby Pierce and Sam Woodburn
   * Final Project SER210

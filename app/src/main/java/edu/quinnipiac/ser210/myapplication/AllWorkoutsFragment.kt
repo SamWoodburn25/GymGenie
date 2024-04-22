@@ -7,20 +7,19 @@ package edu.quinnipiac.ser210.myapplication
  */
 
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import edu.quinnipiac.ser210.myapplication.R
+import edu.quinnipiac.ser210.myapplication.APIData.ExerciseRepository
 import edu.quinnipiac.ser210.myapplication.databinding.FragmentAllWorkoutsBinding
-import edu.quinnipiac.ser210.myapplication.databinding.FragmentHomeBinding
 
 class AllWorkoutsFragment : Fragment() {
     //binding and navigation
@@ -45,6 +44,8 @@ class AllWorkoutsFragment : Fragment() {
         val args = AllWorkoutsFragmentArgs.fromBundle(requireArguments())
         selectedMuscle = args.bodyPart
 
+        binding.muscleTextView.setText("Muscle: $selectedMuscle")
+
         // Setup ViewModel
         val repository = ExerciseRepository()
         viewModelFactory = ExerciseViewModelFactory(repository)
@@ -58,6 +59,30 @@ class AllWorkoutsFragment : Fragment() {
         viewModel.getExercises(selectedMuscle)
         //log to monitor data
         Log.d("BODY PART", "search: ${selectedMuscle}")
+
+        /*
+          *Saved Workouts button
+         */
+        val button = binding.FABSavedWorkoutsButton
+        button.setOnClickListener{
+            showNameWorkoutDialogue()
+        }
+    }
+
+    private fun showNameWorkoutDialogue() {
+        val editText = EditText(context)
+        editText.inputType = InputType.TYPE_CLASS_TEXT
+        AlertDialog.Builder(requireContext())
+            .setTitle("Name Your Workout")
+            .setView(editText)
+            .setPositiveButton("Save") { dialog, which ->
+                val workoutName = editText.text.toString()
+                val action = AllWorkoutsFragmentDirections.actionAllWorkoutsFragmentToSavedWorkoutsFragment()
+                findNavController().navigate(action)
+            }
+            .setNegativeButton("Cancel", null)
+            .create()
+            .show()
     }
 
     //setting up recycler view with recycler adapter
