@@ -37,8 +37,12 @@ class AllWorkoutsFragment : Fragment() {
     private lateinit var viewModel: ExerciseViewModel
     private lateinit var viewModelFactory: ExerciseViewModelFactory
 
+    //recycler view
     private lateinit var selectedMuscle: String
     lateinit var recyclerAdapter: RecyclerAdapter
+
+    //name workout to save to database
+    private lateinit var workoutName: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -49,18 +53,24 @@ class AllWorkoutsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //navigation
         navController = findNavController()
         isFirstSelection = true
 
-        //observe database
-        val repository = ExerciseRepository(ApiInterface.ApiClient.instance, DatabaseBuilder.getDatabase(requireContext()).workoutDao())
+        //default title (nothing entered)
+        workoutName = "New Workout"
+
+        //observe database and api through the exercise repository and exercise view model
+        val repository = ExerciseRepository(
+            ApiInterface.ApiClient.instance,
+            DatabaseBuilder.getDatabase(requireContext())
+                .workoutDao())
         viewModelFactory = ExerciseViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(ExerciseViewModel::class.java)
 
         //save workouts button
         binding.FABSavedWorkoutsButton.setOnClickListener {
             showNameWorkoutDialogue()
-            saveCurrentWorkout()
         }
 
         //back button
@@ -68,13 +78,13 @@ class AllWorkoutsFragment : Fragment() {
             navController.navigate(R.id.action_AllWorkoutsFragment_to_HomeFragment)
         }
 
-        // Retrieve the chosen location from arguments and add to text view
+        // Retrieve the chosen body part from args and set text
         val args = AllWorkoutsFragmentArgs.fromBundle(requireArguments())
         selectedMuscle = args.bodyPart
         binding.muscleTextView.setText("Muscle: $selectedMuscle")
 
 
-        // Setup RecyclerView with Adapter and click listener to navigate
+        // Setup RecyclerView with RecyclerAdapter
         setupRecyclerView()
 
         // Observe ViewModel LiveData for exercise names
@@ -88,11 +98,17 @@ class AllWorkoutsFragment : Fragment() {
     private fun showNameWorkoutDialogue() {
         val editText = EditText(context)
         editText.inputType = InputType.TYPE_CLASS_TEXT
+        //alert dialog window
         AlertDialog.Builder(requireContext())
             .setTitle("Name Your Workout")
             .setView(editText)
+            //on save clicked
             .setPositiveButton("Save") { dialog, which ->
-                val workoutName = editText.text.toString()
+                //save the name in a variable
+                workoutName = editText.text.toString()
+                // Call saveCurrentWorkout here after the name is set
+                saveCurrentWorkout(workoutName)
+                //navigate to the saved workouts frag
                 val action = AllWorkoutsFragmentDirections.actionAllWorkoutsFragmentToSavedWorkoutsFragment(workoutName)
                 findNavController().navigate(action)
             }
@@ -101,18 +117,21 @@ class AllWorkoutsFragment : Fragment() {
             .show()
     }
 
-    //added- save workout
-    private fun saveCurrentWorkout() {
+
+    //save workout
+    private fun saveCurrentWorkout(workoutName: String) {
+        //the current list on the recycler adapter is being saved
         val currentExercises = recyclerAdapter.getCurrentList()
         if (currentExercises.isNotEmpty()) {
-            viewModel.saveWorkout(selectedMuscle, currentExercises)
+            //call save workout from view model and pass in info
+            viewModel.saveWorkout(workoutName, selectedMuscle, currentExercises)
         } else {
             Toast.makeText(context, "No exercises to save", Toast.LENGTH_SHORT).show()
         }
     }
 
-    //setting up recycler view with recycler adapter
     private fun setupRecyclerView() {
+        //set up recycler view with recycler adapter
         recyclerAdapter = RecyclerAdapter(listOf())
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = recyclerAdapter
@@ -120,12 +139,13 @@ class AllWorkoutsFragment : Fragment() {
 
     //observe live data changes
     private fun observeViewModel() {
-        //observing the live data list of hits from the view model
+        //observing the live data list of exercises from the view model
         viewModel.allExerciseList.observe(viewLifecycleOwner) { exercises ->
             (binding.recyclerView.adapter as? RecyclerAdapter)?.submitList(exercises)
             if (exercises != null) {
                 //log for info
                 Log.d("ALL_WORKOUT_FRAGMENT", "LiveData observer received ${exercises.size} jobs")
+                //submit list
                 recyclerAdapter.submitList(exercises)
             } else {
                 Log.d("ALL_WORKOUT_FRAGMENT", "LiveData observer received null")

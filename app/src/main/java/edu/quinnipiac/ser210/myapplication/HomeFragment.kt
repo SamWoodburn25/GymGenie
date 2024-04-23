@@ -43,16 +43,18 @@ class HomeFragment : Fragment() {
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, bodyParts)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.bodyPartSpinner.adapter = adapter
+
         //item selected listener, navigate to all workouts frag
         binding.bodyPartSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 //log to keep track of data
                 Log.d("HomeFragment", "onItemSelected: position = $position")
                 if (isFirstSelection) {
-                    isFirstSelection = false
+                    isFirstSelection = false    //next selection
                     return
                 }
-                //set item selected to selected body part, pass to all workouts frag
+
+                //set item selected to selected body part, pass to all workouts frag & navigate there, log info
                 val selectedBodyPart = parent.getItemAtPosition(position).toString()
                 Log.d("HomeFragment", "Selected body part: $selectedBodyPart")
                 val action = HomeFragmentDirections.actionHomeFragmentToAllWorkoutsFragment(selectedBodyPart)
@@ -60,7 +62,8 @@ class HomeFragment : Fragment() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                // Optionally handle the case where nothing is selected
+                //stay on home frag
+                isFirstSelection = true
             }
         }
 
@@ -80,7 +83,7 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        isFirstSelection = true  // Reset the flag so that automatic selection is ignored
+        isFirstSelection = true  // Reset the flag so that automatic selection is ignored!!
     }
 
 }

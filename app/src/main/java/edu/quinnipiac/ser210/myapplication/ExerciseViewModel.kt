@@ -36,6 +36,7 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                //get the exercises from the repository according to body part
                 val response = repository.getExercises(bodyPart)
                 Log.d("VIEW_MODEL: ", "API call success")
 
@@ -55,19 +56,23 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
         }
     }
 
-    fun saveWorkout(bodyPart: String, exercises: List<ExerciseItem>) {
+    //save to database with title, body part, and a list of json exercises
+    fun saveWorkout(title: String, bodyPart: String, exercises: List<ExerciseItem>) {
         viewModelScope.launch {
             val gson = Gson()
             val jsonExercises = gson.toJson(exercises)
-            val workout = Workout(bodyPart = bodyPart, exercises = jsonExercises)
+            val workout = Workout(title = title, bodyPart = bodyPart, exercises = jsonExercises)
+            //inserts the workout to the database with the repository object
             repository.insertWorkout(workout)
         }
     }
 
+    //get all, list of workouts
     fun getAllSavedWorkouts(): LiveData<List<Workout>> {
         return repository.getAllSavedWorkouts()
     }
 
+    //delete all
     fun deleteAllWorkouts() {
         viewModelScope.launch {
             repository.deleteAll()

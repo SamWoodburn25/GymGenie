@@ -16,6 +16,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import edu.quinnipiac.ser210.myapplication.APIData.ApiInterface
@@ -35,6 +36,7 @@ class SavedWorkoutsFragment : Fragment() {
     private lateinit var viewModel: ExerciseViewModel
     private lateinit var workoutName: String
     private val gson = Gson()
+    private lateinit var workoutDao: WorkoutDao
 
     //adapter
     private lateinit var savedWorkoutAdapter: SavedWorkoutAdapter
@@ -47,28 +49,26 @@ class SavedWorkoutsFragment : Fragment() {
         return binding.root
     }
 
-    private lateinit var workoutDao: WorkoutDao
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        //get workout database access object
         workoutDao = DatabaseBuilder.getDatabase(context).workoutDao()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //workout title
+        //workout title from args
         val args = SavedWorkoutsFragmentArgs.fromBundle(requireArguments())
         workoutName = args.workoutName.toString()
 
-
+        //make the view model adn repository
         val repository = ExerciseRepository(
             ApiInterface.ApiClient.instance,
             DatabaseBuilder.getDatabase(requireContext()).workoutDao()
         )
         val factory = ExerciseViewModelFactory(repository)
-
-        //making the view model
         viewModel = ViewModelProvider(this, factory).get(ExerciseViewModel::class.java)  // Ensure ViewModel is correctly implemented
 
         //set up recycler
@@ -76,43 +76,50 @@ class SavedWorkoutsFragment : Fragment() {
 
         //observe view model
         observeViewModel()
-        //observeWorkouts()
 
         //clear button
         binding.clearDatabaseButton.setOnClickListener{
             viewModel.deleteAllWorkouts()
         }
 
-    }
+        //back button
+        binding.savedBackToHome.setOnClickListener{
+            val action = SavedWorkoutsFragmentDirections.actionSavedWorkoutsFragmentToHomeFragment()
+            findNavController().navigate(action)
+        }
 
+    }
 
 
     private fun setupRecyclerView() {
-        savedWorkoutAdapter = SavedWorkoutAdapter(listOf(), workoutName)
+        //set up recycler view with saved workout adapter
+        savedWorkoutAdapter = SavedWorkoutAdapter(listOf())
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = SavedWorkoutAdapter(listOf(), workoutName)  // Initialize your adapter here
+        binding.recyclerView.adapter = SavedWorkoutAdapter(listOf())  // Initialize your adapter here
     }
 
-    private fun observeWorkouts() {
-        viewModel.getAllSavedWorkouts().observe(viewLifecycleOwner) { workouts ->
-            updateUI(workouts)
-       }
-    }
 
-    //observe live data changes
+    //observe view model, get all saved workouts, submit list to the recycler view
     private fun observeViewModel() {
         viewModel.getAllSavedWorkouts().observe(viewLifecycleOwner) { workouts ->
+            val workoutText = workouts.joinToString("\n") { workout ->
+                "${workout.bodyPart}: ${Gson().fromJson(workout.exercises, Array<ExerciseItem>::class.java).joinToString(", ") { it.name }}"
+            }
             (binding.recyclerView.adapter as? SavedWorkoutAdapter)?.submitList(workouts)
             if (workouts != null) {
                 //log for info
                 Log.d("SAVED_WORKOUT_FRAGMENT", "saving from database ${workouts.size} exercises")
                 savedWorkoutAdapter.submitList(workouts)
             } else {
+                //log for failure to observe
                 Log.d("SAVED_WORKOUT_FRAGMENT", "observer received null")
             }
         }
     }
 
+    /*
+        this is gonna help with changing it from JSON
+     */
     private fun updateUI(workouts: List<Workout>) {
         // Assuming you have a TextView or any other UI component to display the saved workouts
         val workoutText = workouts.joinToString("\n") { workout ->
