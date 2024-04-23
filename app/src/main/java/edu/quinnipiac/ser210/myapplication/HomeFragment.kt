@@ -64,10 +64,12 @@ class HomeFragment : Fragment() {
             }
         }
 
+        //save workouts button
         binding.SavedWorkouts.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToSavedWorkoutsFragment(null)
             navController.navigate(action)
         }
+
 
     }
 

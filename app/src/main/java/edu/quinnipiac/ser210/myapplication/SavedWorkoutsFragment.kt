@@ -8,6 +8,7 @@ package edu.quinnipiac.ser210.myapplication
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import edu.quinnipiac.ser210.myapplication.APIData.ApiInterface
 import edu.quinnipiac.ser210.myapplication.APIData.ExerciseItem
@@ -31,7 +33,11 @@ class SavedWorkoutsFragment : Fragment() {
 
     //observe database viewmodel
     private lateinit var viewModel: ExerciseViewModel
+    private lateinit var workoutName: String
     private val gson = Gson()
+
+    //adapter
+    private lateinit var savedWorkoutAdapter: SavedWorkoutAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,35 +59,58 @@ class SavedWorkoutsFragment : Fragment() {
 
         //workout title
         val args = SavedWorkoutsFragmentArgs.fromBundle(requireArguments())
-        val workoutName = args.workoutName
-        binding.savedWorkouts.setText("Workout Name: $workoutName")
+        workoutName = args.workoutName.toString()
+
 
         val repository = ExerciseRepository(
             ApiInterface.ApiClient.instance,
             DatabaseBuilder.getDatabase(requireContext()).workoutDao()
         )
         val factory = ExerciseViewModelFactory(repository)
-        viewModel = ViewModelProvider(
-            this,
-            factory
-        ).get(ExerciseViewModel::class.java)  // Ensure ViewModel is correctly implemented
-            //setupRecyclerView()
-            observeWorkouts()
 
+        //making the view model
+        viewModel = ViewModelProvider(this, factory).get(ExerciseViewModel::class.java)  // Ensure ViewModel is correctly implemented
+
+        //set up recycler
+        setupRecyclerView()
+
+        //observe view model
+        observeViewModel()
+        //observeWorkouts()
+
+        //clear button
+        binding.clearDatabaseButton.setOnClickListener{
+            viewModel.deleteAllWorkouts()
         }
 
+    }
 
-//    private fun setupRecyclerView() {
-//        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-//        binding.recyclerView.adapter = RecyclerAdapter(listOf())  // Initialize your adapter here
-//    }
+
+
+    private fun setupRecyclerView() {
+        savedWorkoutAdapter = SavedWorkoutAdapter(listOf(), workoutName)
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = SavedWorkoutAdapter(listOf(), workoutName)  // Initialize your adapter here
+    }
 
     private fun observeWorkouts() {
         viewModel.getAllSavedWorkouts().observe(viewLifecycleOwner) { workouts ->
             updateUI(workouts)
-//        workoutDao.getAllWorkouts().observe(viewLifecycleOwner) { workouts ->
-//            updateUI(workouts)
        }
+    }
+
+    //observe live data changes
+    private fun observeViewModel() {
+        viewModel.getAllSavedWorkouts().observe(viewLifecycleOwner) { workouts ->
+            (binding.recyclerView.adapter as? SavedWorkoutAdapter)?.submitList(workouts)
+            if (workouts != null) {
+                //log for info
+                Log.d("SAVED_WORKOUT_FRAGMENT", "saving from database ${workouts.size} exercises")
+                savedWorkoutAdapter.submitList(workouts)
+            } else {
+                Log.d("SAVED_WORKOUT_FRAGMENT", "observer received null")
+            }
+        }
     }
 
     private fun updateUI(workouts: List<Workout>) {

@@ -37,4 +37,9 @@ class ExerciseRepository(private val apiClient: ApiInterface, private val workou
     fun getAllSavedWorkouts(): LiveData<List<Workout>> {
         return workoutDao.getAllWorkouts()
     }
+
+    //clear database
+    suspend fun deleteAll(){
+        workoutDao.deleteAll()
+    }
 }

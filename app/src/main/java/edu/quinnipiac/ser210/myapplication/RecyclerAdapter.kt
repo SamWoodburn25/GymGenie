@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import edu.quinnipiac.ser210.myapplication.APIData.ExerciseItem
 import edu.quinnipiac.ser210.myapplication.databinding.ListItemBinding
 
-//list of jobs variable, to be accessed by other classes
-lateinit var exerciseItemList: List<ExerciseItem>
+
 
 class RecyclerAdapter(private var dataSet: List<ExerciseItem>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+
+    //list of jobs variable, to be accessed by other classes
+    lateinit var exerciseItemList: List<ExerciseItem>
 
     //view holder class
     class ViewHolder(private val binding: ListItemBinding): RecyclerView.ViewHolder(binding.root) {
@@ -32,7 +34,6 @@ class RecyclerAdapter(private var dataSet: List<ExerciseItem>) : RecyclerView.Ad
         val binding = ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return ViewHolder(binding)
-        //return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

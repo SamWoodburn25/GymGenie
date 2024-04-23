@@ -68,4 +68,10 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
         return repository.getAllSavedWorkouts()
     }
 
+    fun deleteAllWorkouts() {
+        viewModelScope.launch {
+            repository.deleteAll()
+        }
+    }
+
 }

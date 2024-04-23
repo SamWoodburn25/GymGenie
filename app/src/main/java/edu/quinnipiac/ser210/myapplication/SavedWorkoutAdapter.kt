@@ -1,56 +1,73 @@
 package edu.quinnipiac.ser210.myapplication
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import edu.quinnipiac.ser210.myapplication.data.Workout
+import edu.quinnipiac.ser210.myapplication.databinding.ListItemBinding
+import edu.quinnipiac.ser210.myapplication.databinding.SavedListItemBinding
 
-class SavedWorkoutAdapter : ListAdapter<Workout, SavedWorkoutAdapter.ViewHolder>(ExerciseComparator()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.create(parent)
-    }
+class SavedWorkoutAdapter(private var dataSet: List<Workout>, name: String) : RecyclerView.Adapter<SavedWorkoutAdapter.SavedViewHolder>() {
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val current = getItem(position)
-        holder.bind(current.exercises)
-    }
-
+    lateinit var fullWorkoutList: List<Workout>
+    var name = name
 
     //view holder class
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        //text view variables
-        val textViewName: TextView = view.findViewById(R.id.savedWorkoutItem)
-        fun bind(exercise: String) {
-            textViewName.text = "Exercise Name: "+exercise
+    class SavedViewHolder(private val binding: SavedListItemBinding, title: String): RecyclerView.ViewHolder(binding.root) {
+            var title = title
+        fun bind(workout: Workout) {
+            binding.workoutName.text = "Title: ${title}"
+            binding.savedWorkout.text = "Exercise Name: ${workout.exercises}"
         }
+    }
 
-        companion object {
-            fun create(parent: ViewGroup): ViewHolder {
-                val view: View = LayoutInflater.from(parent.context).inflate(R.layout.saved_list_item, parent, false)
-                return ViewHolder(view)
+    fun getCurrentList(): List<Workout> {
+        return dataSet
+    }
+
+    //make view holder, list_item layout
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedWorkoutAdapter.SavedViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.saved_list_item, parent, false)
+        fullWorkoutList = dataSet
+        val binding = SavedListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+        return SavedViewHolder(binding, name)
+    }
+
+
+    override fun onBindViewHolder(holder: SavedViewHolder, position: Int) {
+        //bind hit to holder
+        val workout = dataSet[position]
+        holder.bind(workout)
+
+        holder.bind(dataSet[position])
+    }
+
+    override fun getItemCount() = dataSet.size
+
+
+    //load a list of Hit to the dataset variable
+    fun submitList(newWorkout: List<Workout>) {
+        val diffCallback = object : DiffUtil.Callback() {
+            override fun getOldListSize(): Int = dataSet.size
+            override fun getNewListSize(): Int = newWorkout.size
+
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                // This depends on whether ExerciseItem has an ID or some unique property
+                // If it does not have a unique identifier, you may need to compare names or another field
+                return dataSet[oldItemPosition] == newWorkout[newItemPosition]
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return dataSet[oldItemPosition] == newWorkout[newItemPosition]
             }
         }
+
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        dataSet = newWorkout
+        diffResult.dispatchUpdatesTo(this)
     }
-
-    class ExerciseComparator: DiffUtil.ItemCallback<Workout>() {
-        override fun areItemsTheSame(oldItem: Workout, newItem: Workout): Boolean {
-            return oldItem === newItem
-        }
-
-        override fun areContentsTheSame(oldItem: Workout, newItem: Workout): Boolean {
-            return oldItem.exercises == newItem.exercises
-        }
-
-    }
-
-
-
-
-
-
 }
