@@ -11,6 +11,8 @@ import edu.quinnipiac.ser210.myapplication.databinding.ListItemBinding
 lateinit var exerciseItemList: List<ExerciseItem>
 
 class RecyclerAdapter(private var dataSet: List<ExerciseItem>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+//class RecyclerAdapter(private var workouts: List<Workout>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+
 
     //view holder class
     class ViewHolder(private val binding: ListItemBinding): RecyclerView.ViewHolder(binding.root) {

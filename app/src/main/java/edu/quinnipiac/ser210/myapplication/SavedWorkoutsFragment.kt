@@ -34,7 +34,7 @@ class SavedWorkoutsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSavedWorkoutsBinding.inflate(inflater, container, false)
-       // return binding.root
+        // return binding.root
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -58,10 +58,10 @@ class SavedWorkoutsFragment : Fragment() {
             this,
             factory
         ).get(ExerciseViewModel::class.java)  // Ensure ViewModel is correctly implemented
-            //setupRecyclerView()
-            observeWorkouts()
+        //setupRecyclerView()
+        observeWorkouts()
 
-        }
+    }
 
 
 //    private fun setupRecyclerView() {
@@ -74,7 +74,7 @@ class SavedWorkoutsFragment : Fragment() {
             updateUI(workouts)
 //        workoutDao.getAllWorkouts().observe(viewLifecycleOwner) { workouts ->
 //            updateUI(workouts)
-       }
+        }
     }
 
     private fun updateUI(workouts: List<Workout>) {
@@ -92,6 +92,3 @@ class SavedWorkoutsFragment : Fragment() {
     }
 
 }
-
-
-
