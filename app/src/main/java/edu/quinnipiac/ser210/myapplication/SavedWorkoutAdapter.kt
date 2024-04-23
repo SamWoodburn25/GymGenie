@@ -10,8 +10,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import edu.quinnipiac.ser210.myapplication.APIData.ExerciseItem
 import edu.quinnipiac.ser210.myapplication.data.Workout
-import edu.quinnipiac.ser210.myapplication.databinding.ListItemBinding
 import edu.quinnipiac.ser210.myapplication.databinding.SavedListItemBinding
 
 
@@ -24,7 +25,15 @@ class SavedWorkoutAdapter(private var dataSet: List<Workout>) : RecyclerView.Ada
     class SavedViewHolder(private val binding: SavedListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(workout: Workout) {
             binding.workoutName.text = "Title: ${workout.title}"
-            binding.savedWorkout.text = "Exercise Name: ${workout.exercises}"
+            val exercisesList = Gson().fromJson(workout.exercises, Array<ExerciseItem>::class.java)
+            val exerciseDetails = exercisesList.joinToString("\n") { exercise ->
+                "Exercise name: ${exercise.name}"
+                        // + ", Reps: ${exercise.reps}" // Adjust this line to match the actual structure of ExerciseItem
+            }
+            // Now set the text of the TextView to the formatted string
+            binding.exerciseNameTextView.text = exerciseDetails // Replace with your actual TextView id
+            val exerciseNames = exercisesList.joinToString(", ") { it.name }
+
         }
     }
 
@@ -42,7 +51,7 @@ class SavedWorkoutAdapter(private var dataSet: List<Workout>) : RecyclerView.Ada
         //bind workout to holder
         val workout = dataSet[position]
         holder.bind(workout)
-        holder.bind(dataSet[position])
+        //holder.bind(dataSet[position])
     }
 
     override fun getItemCount() = dataSet.size
