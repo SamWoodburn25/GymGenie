@@ -1,4 +1,10 @@
 package edu.quinnipiac.ser210.myapplication.data
+/*
+  * Gabby Pierce and Sam Woodburn
+  * Final Project SER210
+  * Gym Genie
+  * Database builder: uses room database builder to make an instance of gym genies database
+ */
 
 import android.content.Context
 import androidx.room.Room

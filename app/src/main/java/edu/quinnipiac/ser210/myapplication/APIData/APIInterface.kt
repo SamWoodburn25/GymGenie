@@ -1,4 +1,10 @@
 package edu.quinnipiac.ser210.myapplication.APIData
+/*
+  * Gabby Pierce and Sam Woodburn
+  * Final Project SER210
+  * Gym Genie
+  * API interface: connect to rapid api host
+ */
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,13 +18,15 @@ import retrofit2.http.Query
 //interface
 interface ApiInterface {
 
+    //headers
     @Headers(
         "X-RapidAPI-Host: gym-fit.p.rapidapi.com",
         "X-RapidAPI-Key: 1ed9d7cc95mshde0f3be1c7ed937p103577jsn1d49282e63bd"
     )
-    //using the search exercises endpoint
 
+    //using the search exercises endpoint
     @GET("exercises/search")
+    //get exercises from api method, using body part query
     suspend fun getExercises(
         @Query("bodyPart") bodyPart: String
     ): Response<ExerciseJSON>
@@ -26,7 +34,6 @@ interface ApiInterface {
 
     object ApiClient {
         //log the info
-
         private val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
@@ -34,7 +41,7 @@ interface ApiInterface {
             .addInterceptor(logging)
             .build()
 
-        //implement api
+        //implement api with retrofit
         val instance: ApiInterface by lazy {
             Retrofit.Builder()
                 .baseUrl("https://gym-fit.p.rapidapi.com/")

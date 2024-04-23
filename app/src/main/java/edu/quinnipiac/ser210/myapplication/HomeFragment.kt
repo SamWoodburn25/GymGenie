@@ -25,6 +25,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var navController: NavController
 
+    //stay on home frag
     var isFirstSelection = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -37,18 +38,23 @@ class HomeFragment : Fragment() {
         navController = findNavController()
         isFirstSelection = true
 
-
+        //spinner selection for body part
         val bodyParts = arrayOf("Back", "Arms", "Legs", "Chest", "Shoulders", "Core")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, bodyParts)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.bodyPartSpinner.adapter = adapter
+
+        //item selected listener, navigate to all workouts frag
         binding.bodyPartSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                //log to keep track of data
                 Log.d("HomeFragment", "onItemSelected: position = $position")
                 if (isFirstSelection) {
-                    isFirstSelection = false
+                    isFirstSelection = false    //next selection
                     return
                 }
+
+                //set item selected to selected body part, pass to all workouts frag & navigate there, log info
                 val selectedBodyPart = parent.getItemAtPosition(position).toString()
                 Log.d("HomeFragment", "Selected body part: $selectedBodyPart")
                 val action = HomeFragmentDirections.actionHomeFragmentToAllWorkoutsFragment(selectedBodyPart)
@@ -56,13 +62,17 @@ class HomeFragment : Fragment() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                // Optionally handle the case where nothing is selected
+                //stay on home frag
+                isFirstSelection = true
             }
         }
 
+        //save workouts button
         binding.SavedWorkouts.setOnClickListener {
-            navController.navigate(R.id.action_HomeFragment_to_SavedWorkoutsFragment)
+            val action = HomeFragmentDirections.actionHomeFragmentToSavedWorkoutsFragment(null)
+            navController.navigate(action)
         }
+
 
     }
 
@@ -73,7 +83,7 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        isFirstSelection = true  // Reset the flag so that automatic selection is ignored
+        isFirstSelection = true  // Reset the flag so that automatic selection is ignored!!
     }
 
 }

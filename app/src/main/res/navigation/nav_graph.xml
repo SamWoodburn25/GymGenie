@@ -44,7 +44,15 @@
         android:id="@+id/SavedWorkoutsFragment"
         android:name="edu.quinnipiac.ser210.myapplication.SavedWorkoutsFragment"
         android:label="fragment_saved_workouts"
-        tools:layout="@layout/fragment_saved_workouts"/>
+        tools:layout="@layout/fragment_saved_workouts">
+        <argument
+            android:name="workoutName"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_SavedWorkoutsFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/InformationFragment"
