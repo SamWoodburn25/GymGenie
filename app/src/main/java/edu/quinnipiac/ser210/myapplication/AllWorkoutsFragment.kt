@@ -21,10 +21,11 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import edu.quinnipiac.ser210.myapplication.APIData.ApiInterface
+import edu.quinnipiac.ser210.myapplication.APIData.ExerciseItem
 import edu.quinnipiac.ser210.myapplication.data.DatabaseBuilder
 import edu.quinnipiac.ser210.myapplication.databinding.FragmentAllWorkoutsBinding
 
-class AllWorkoutsFragment : Fragment() {
+class AllWorkoutsFragment : Fragment(),OnItemRemoved {
     //binding and navigation
     private var _binding: FragmentAllWorkoutsBinding? = null
     private val binding get() = _binding!!
@@ -43,6 +44,9 @@ class AllWorkoutsFragment : Fragment() {
 
     //name workout to save to database
     private lateinit var workoutName: String
+
+    //delete an item
+    var isDeleted: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -124,7 +128,7 @@ class AllWorkoutsFragment : Fragment() {
         val currentExercises = recyclerAdapter.getCurrentList()
         if (currentExercises.isNotEmpty()) {
             //call save workout from view model and pass in info
-            viewModel.saveWorkout(workoutName, selectedMuscle, currentExercises)
+            viewModel.saveWorkout(workoutName, selectedMuscle, currentExercises, isDeleted)
         } else {
             Toast.makeText(context, "No exercises to save", Toast.LENGTH_SHORT).show()
         }
@@ -132,7 +136,7 @@ class AllWorkoutsFragment : Fragment() {
 
     private fun setupRecyclerView() {
         //set up recycler view with recycler adapter
-        recyclerAdapter = RecyclerAdapter(listOf())
+        recyclerAdapter = RecyclerAdapter(mutableListOf(), this)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = recyclerAdapter
     }
@@ -156,6 +160,12 @@ class AllWorkoutsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null // Avoid memory leak
+    }
+
+    override fun onItemRemove(exerciseitem: ExerciseItem){
+        val newList = recyclerAdapter.getCurrentList().toMutableList()
+        newList.remove(exerciseitem)
+        recyclerAdapter.submitList(newList)
     }
 
 }

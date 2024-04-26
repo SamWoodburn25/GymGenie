@@ -16,5 +16,6 @@ data class Workout(
     //info to save
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "body_part") val bodyPart: String,
-    @ColumnInfo(name = "exercises") val exercises: String // Storing List<Exercise> as a JSON string
+    @ColumnInfo(name = "exercises") val exercises: String, // Storing List<Exercise> as a JSON string
+    @ColumnInfo(name = "isDeleted") val isDeleted: Boolean
 )

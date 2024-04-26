@@ -21,7 +21,7 @@ interface WorkoutDao {
 
     //get list  of all workouts
     @Query("SELECT * FROM workouts")
-    fun getAllWorkouts(): LiveData<List<Workout>>
+    fun getAllWorkouts(): LiveData<MutableList<Workout>>
 
     //delete a workout
     @Delete

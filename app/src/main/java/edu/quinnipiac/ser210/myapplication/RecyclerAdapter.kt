@@ -6,8 +6,11 @@ package edu.quinnipiac.ser210.myapplication
   * recycler adapter: for the all workouts fragment to display the exercise names; xml list_item
  */
 
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.persistableBundleOf
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import edu.quinnipiac.ser210.myapplication.APIData.ExerciseItem
@@ -15,15 +18,27 @@ import edu.quinnipiac.ser210.myapplication.databinding.ListItemBinding
 
 
 
-class RecyclerAdapter(private var dataSet: List<ExerciseItem>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
-//class RecyclerAdapter(private var workouts: List<Workout>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(private var dataSet: MutableList<ExerciseItem>, private val onItemRemoved: OnItemRemoved) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
 
     //list of exercise items
     lateinit var exerciseItemList: List<ExerciseItem>
 
     //view holder class
-    class ViewHolder(private val binding: ListItemBinding): RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ListItemBinding, dataSet: MutableList<ExerciseItem>, onItemRemoved: OnItemRemoved): RecyclerView.ViewHolder(binding.root) {
+       init {
+           /*
+           itemView.setOnClickListener{
+               val itemToRemove = dataSet[position]
+               // Remove the item from your data set
+               dataSet.remove(itemToRemove)
+               val currentList = dataSet.toMutableList()
+           }
+            */
+           binding.deleteButton.setOnClickListener{
+               onItemRemoved.onItemRemove(dataSet[position])
+           }
+       }
         fun bind(exercise: ExerciseItem) {
             //bind exercise name
             binding.exerciseName.text = "Exercise Name: ${exercise.name}"
@@ -31,7 +46,7 @@ class RecyclerAdapter(private var dataSet: List<ExerciseItem>) : RecyclerView.Ad
     }
 
     //get current list of exercise items
-    fun getCurrentList(): List<ExerciseItem> {
+    fun getCurrentList(): MutableList<ExerciseItem> {
         return dataSet
     }
 
@@ -42,7 +57,7 @@ class RecyclerAdapter(private var dataSet: List<ExerciseItem>) : RecyclerView.Ad
         exerciseItemList = dataSet
         //bind to list item layout and return
         val binding = ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding, dataSet, onItemRemoved)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -56,7 +71,7 @@ class RecyclerAdapter(private var dataSet: List<ExerciseItem>) : RecyclerView.Ad
 
 
     //load a list of exercises to the dataset variable
-    fun submitList(newExercises: List<ExerciseItem>) {
+    fun submitList(newExercises: MutableList<ExerciseItem>) {
         val diffCallback = object : DiffUtil.Callback() {
             override fun getOldListSize(): Int = dataSet.size
             override fun getNewListSize(): Int = newExercises.size
@@ -76,4 +91,5 @@ class RecyclerAdapter(private var dataSet: List<ExerciseItem>) : RecyclerView.Ad
         dataSet = newExercises
         diffResult.dispatchUpdatesTo(this)
     }
+
 }

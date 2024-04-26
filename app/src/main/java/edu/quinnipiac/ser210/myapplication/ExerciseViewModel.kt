@@ -21,8 +21,8 @@ import kotlinx.coroutines.withContext
 
 
 class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel() {
-    private val _allExerciseList = MutableLiveData<List<ExerciseItem>>()
-    val allExerciseList: LiveData<List<ExerciseItem>> = _allExerciseList
+    private val _allExerciseList = MutableLiveData<MutableList<ExerciseItem>>()
+    val allExerciseList: LiveData<MutableList<ExerciseItem>> = _allExerciseList
 
     // Optionally, add LiveData for error or loading states
     private val _isLoading = MutableLiveData<Boolean>()
@@ -50,25 +50,25 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
                 withContext(Dispatchers.Main) {
                     _isLoading.value = false
                     _error.value = "Failed to load exercises: ${e.message}"
-                    _allExerciseList.value = listOf() // Indicate no data
+                    _allExerciseList.value = mutableListOf() // Indicate no data
                 }
             }
         }
     }
 
     //save to database with title, body part, and a list of json exercises
-    fun saveWorkout(title: String, bodyPart: String, exercises: List<ExerciseItem>) {
+    fun saveWorkout(title: String, bodyPart: String, exercises: MutableList<ExerciseItem>, isDeleted: Boolean) {
         viewModelScope.launch {
             val gson = Gson()
             val jsonExercises = gson.toJson(exercises)
-            val workout = Workout(title = title, bodyPart = bodyPart, exercises = jsonExercises)
+            val workout = Workout(title = title, bodyPart = bodyPart, exercises = jsonExercises, isDeleted = isDeleted)
             //inserts the workout to the database with the repository object
             repository.insertWorkout(workout)
         }
     }
 
     //get all, list of workouts
-    fun getAllSavedWorkouts(): LiveData<List<Workout>> {
+    fun getAllSavedWorkouts(): LiveData<MutableList<Workout>> {
         return repository.getAllSavedWorkouts()
     }
 
@@ -76,6 +76,13 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
     fun deleteAllWorkouts() {
         viewModelScope.launch {
             repository.deleteAll()
+        }
+    }
+
+    //delete single workout
+    fun delete(workout: Workout){
+        viewModelScope.launch {
+            repository.delete(workout)
         }
     }
 
