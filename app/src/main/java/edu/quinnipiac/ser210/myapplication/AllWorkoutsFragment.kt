@@ -128,7 +128,7 @@ class AllWorkoutsFragment : Fragment(),OnItemRemoved {
         val currentExercises = recyclerAdapter.getCurrentList()
         if (currentExercises.isNotEmpty()) {
             //call save workout from view model and pass in info
-            viewModel.saveWorkout(workoutName, selectedMuscle, currentExercises, isDeleted)
+            viewModel.saveWorkout(workoutName, selectedMuscle, currentExercises, "reps (to be saved)")
         } else {
             Toast.makeText(context, "No exercises to save", Toast.LENGTH_SHORT).show()
         }
@@ -163,9 +163,11 @@ class AllWorkoutsFragment : Fragment(),OnItemRemoved {
     }
 
     override fun onItemRemove(exerciseitem: ExerciseItem){
+        Log.d("ITEM REMOVE", "item: $exerciseitem")
         val newList = recyclerAdapter.getCurrentList().toMutableList()
         newList.remove(exerciseitem)
         recyclerAdapter.submitList(newList)
+
     }
 
 }

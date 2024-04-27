@@ -8,12 +8,15 @@ package edu.quinnipiac.ser210.myapplication
  */
 
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -39,9 +42,9 @@ class HomeFragment : Fragment() {
         isFirstSelection = true
 
         //spinner selection for body part
-        val bodyParts = arrayOf("Back", "Arms", "Legs", "Chest", "Shoulders", "Core")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, bodyParts)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val bodyParts = arrayOf("Select a Body Part", "Back", "Arms", "Legs", "Chest", "Shoulders", "Core")
+        val adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, bodyParts)
+        adapter.setDropDownViewResource(R.layout.spinner_item)
         binding.bodyPartSpinner.adapter = adapter
 
         //item selected listener, navigate to all workouts frag
@@ -49,16 +52,20 @@ class HomeFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 //log to keep track of data
                 Log.d("HomeFragment", "onItemSelected: position = $position")
+
+                //stay on home frag, don't navigate right away
                 if (isFirstSelection) {
                     isFirstSelection = false    //next selection
                     return
                 }
 
-                //set item selected to selected body part, pass to all workouts frag & navigate there, log info
-                val selectedBodyPart = parent.getItemAtPosition(position).toString()
-                Log.d("HomeFragment", "Selected body part: $selectedBodyPart")
-                val action = HomeFragmentDirections.actionHomeFragmentToAllWorkoutsFragment(selectedBodyPart)
-                findNavController().navigate(action)
+                    //set item selected to selected body part, pass to all workouts frag & navigate there, log info
+                    val selectedBodyPart = parent.getItemAtPosition(position).toString()
+                    Log.d("HomeFragment", "Selected body part: $selectedBodyPart")
+                    val action = HomeFragmentDirections.actionHomeFragmentToAllWorkoutsFragment(
+                        selectedBodyPart
+                    )
+                    findNavController().navigate(action)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -85,5 +92,11 @@ class HomeFragment : Fragment() {
         super.onResume()
         isFirstSelection = true  // Reset the flag so that automatic selection is ignored!!
     }
+
+    fun resetSpinner(){
+        Log.d("HOMEEEE", "callin the method")
+        isFirstSelection = true
+    }
+
 
 }

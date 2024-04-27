@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/blue_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/painticon"
+        android:title="BLUE BACKGROUN"/>
+
+    <item
+        android:id="@+id/pink_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/painticon"
+        android:title="PINK BACKGROUND"/>
+
+    <item
+        android:id="@+id/green_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/painticon"
+        android:title="GREEN BACKGROUND" />
+    <item
+        android:id="@+id/purple_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/painticon"
+        android:title="PURPLE BACKGROUND" />
+
+</menu>

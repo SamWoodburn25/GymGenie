@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import edu.quinnipiac.ser210.myapplication.APIData.ExerciseItem
 import edu.quinnipiac.ser210.myapplication.databinding.ListItemBinding
-
+import kotlin.random.Random
 
 
 class RecyclerAdapter(private var dataSet: MutableList<ExerciseItem>, private val onItemRemoved: OnItemRemoved) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
@@ -23,23 +23,26 @@ class RecyclerAdapter(private var dataSet: MutableList<ExerciseItem>, private va
 
     //list of exercise items
     lateinit var exerciseItemList: List<ExerciseItem>
+    lateinit var repsString: String
 
     //view holder class
     class ViewHolder(private val binding: ListItemBinding, dataSet: MutableList<ExerciseItem>, onItemRemoved: OnItemRemoved): RecyclerView.ViewHolder(binding.root) {
+      lateinit var currentreps: String
        init {
-           /*
-           itemView.setOnClickListener{
-               val itemToRemove = dataSet[position]
-               // Remove the item from your data set
-               dataSet.remove(itemToRemove)
-               val currentList = dataSet.toMutableList()
-           }
-            */
            binding.deleteButton.setOnClickListener{
                onItemRemoved.onItemRemove(dataSet[position])
            }
        }
         fun bind(exercise: ExerciseItem) {
+            //random reps
+            var num1 = (3..4).random()
+            var num2 = (8..12).random()
+            if(num2%2 == 1){
+                num2 = num2+1
+            }
+            currentreps = "Reps: ($num1 x $num2)"
+            //bind reps
+            binding.reps.text = "$currentreps"
             //bind exercise name
             binding.exerciseName.text = "Exercise Name: ${exercise.name}"
         }
@@ -48,6 +51,10 @@ class RecyclerAdapter(private var dataSet: MutableList<ExerciseItem>, private va
     //get current list of exercise items
     fun getCurrentList(): MutableList<ExerciseItem> {
         return dataSet
+    }
+
+    fun getCurrentReps(): String {
+        return repsString
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

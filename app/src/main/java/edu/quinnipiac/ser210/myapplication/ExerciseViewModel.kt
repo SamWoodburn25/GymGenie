@@ -43,7 +43,6 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
                 withContext(Dispatchers.Main) {
                     _isLoading.value = false
                     _allExerciseList.postValue(response)
-                    //_allExerciseList.value = response ?: listOf()
                 }
             } catch (e: Exception) {
                 Log.d("VIEW_MODEL", "API call failure: ${e.message}")
@@ -57,11 +56,11 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
     }
 
     //save to database with title, body part, and a list of json exercises
-    fun saveWorkout(title: String, bodyPart: String, exercises: MutableList<ExerciseItem>, isDeleted: Boolean) {
+    fun saveWorkout(title: String, bodyPart: String, exercises: MutableList<ExerciseItem>, reps: String) {
         viewModelScope.launch {
             val gson = Gson()
             val jsonExercises = gson.toJson(exercises)
-            val workout = Workout(title = title, bodyPart = bodyPart, exercises = jsonExercises, isDeleted = isDeleted)
+            val workout = Workout(title = title, bodyPart = bodyPart, exercises = jsonExercises, reps = reps)
             //inserts the workout to the database with the repository object
             repository.insertWorkout(workout)
         }
