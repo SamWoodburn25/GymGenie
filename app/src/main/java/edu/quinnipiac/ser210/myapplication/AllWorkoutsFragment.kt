@@ -126,9 +126,11 @@ class AllWorkoutsFragment : Fragment(),OnItemRemoved {
     private fun saveCurrentWorkout(workoutName: String) {
         //the current list on the recycler adapter is being saved
         val currentExercises = recyclerAdapter.getCurrentList()
+        val currentReps = recyclerAdapter.getCurrentReps()
         if (currentExercises.isNotEmpty()) {
             //call save workout from view model and pass in info
-            viewModel.saveWorkout(workoutName, selectedMuscle, currentExercises, "reps (to be saved)")
+            Log.d("REPS","$currentReps")
+            viewModel.saveWorkout(workoutName, selectedMuscle, currentExercises, currentReps)
         } else {
             Toast.makeText(context, "No exercises to save", Toast.LENGTH_SHORT).show()
         }
@@ -164,9 +166,12 @@ class AllWorkoutsFragment : Fragment(),OnItemRemoved {
 
     override fun onItemRemove(exerciseitem: ExerciseItem){
         Log.d("ITEM REMOVE", "item: $exerciseitem")
+        Log.d("ITEM REMOVE", "oldlist: ${recyclerAdapter.getCurrentList()}")
         val newList = recyclerAdapter.getCurrentList().toMutableList()
         newList.remove(exerciseitem)
         recyclerAdapter.submitList(newList)
+        Log.d("ITEM REMOVE", "newlist: ${recyclerAdapter.getCurrentList()}")
+
 
     }
 

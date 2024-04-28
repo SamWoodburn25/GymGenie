@@ -36,7 +36,10 @@ class MainActivity : AppCompatActivity() {
         // Setting the Toolbar
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "Gym Genie"
+        supportActionBar?.let {
+            it.title = "Gym Genie" // Check if this sets the title
+            it.setDisplayShowTitleEnabled(true) // Make sure the title is enabled
+        }
 
         //navigation
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment

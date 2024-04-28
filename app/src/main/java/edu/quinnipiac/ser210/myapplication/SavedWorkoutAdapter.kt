@@ -6,6 +6,7 @@ package edu.quinnipiac.ser210.myapplication
   * saved workout adapter: for the saved workouts fragment to display the exercise names; xml saved_list_item
  */
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -27,8 +28,8 @@ class SavedWorkoutAdapter(private var dataSet: List<Workout>) : RecyclerView.Ada
             binding.workoutName.text = "Title: ${workout.title}"
             val exercisesList = Gson().fromJson(workout.exercises, Array<ExerciseItem>::class.java)
             val exerciseDetails = exercisesList.joinToString("\n") { exercise ->
-                "Exercise name: ${exercise.name}"
-                        // + ", Reps: ${exercise.reps}" // Adjust this line to match the actual structure of ExerciseItem
+                Log.d("WHAT IS THIS", "$exercise")
+                "Exercise name: ${exercise.name}\n${exercise.reps}\n"
             }
             // Now set the text of the TextView to the formatted string
             binding.exerciseNameTextView.text = exerciseDetails // Replace with your actual TextView id

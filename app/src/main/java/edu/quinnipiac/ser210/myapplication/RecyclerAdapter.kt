@@ -17,23 +17,19 @@ import edu.quinnipiac.ser210.myapplication.APIData.ExerciseItem
 import edu.quinnipiac.ser210.myapplication.databinding.ListItemBinding
 import kotlin.random.Random
 
+var currentreps: String = "Reps: "
 
 class RecyclerAdapter(private var dataSet: MutableList<ExerciseItem>, private val onItemRemoved: OnItemRemoved) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
 
     //list of exercise items
     lateinit var exerciseItemList: List<ExerciseItem>
-    lateinit var repsString: String
 
     //view holder class
     class ViewHolder(private val binding: ListItemBinding, dataSet: MutableList<ExerciseItem>, onItemRemoved: OnItemRemoved): RecyclerView.ViewHolder(binding.root) {
-      lateinit var currentreps: String
-       init {
-           binding.deleteButton.setOnClickListener{
-               onItemRemoved.onItemRemove(dataSet[position])
-           }
-       }
-        fun bind(exercise: ExerciseItem) {
+      var itemRemove = onItemRemoved
+        var dataset = dataSet
+        fun bind(exercise: ExerciseItem, position: Int) {
             //random reps
             var num1 = (3..4).random()
             var num2 = (8..12).random()
@@ -45,7 +41,12 @@ class RecyclerAdapter(private var dataSet: MutableList<ExerciseItem>, private va
             binding.reps.text = "$currentreps"
             //bind exercise name
             binding.exerciseName.text = "Exercise Name: ${exercise.name}"
+
+            binding.deleteButton.setOnClickListener{
+                itemRemove.onItemRemove(dataset[position])
+            }
         }
+
     }
 
     //get current list of exercise items
@@ -54,7 +55,8 @@ class RecyclerAdapter(private var dataSet: MutableList<ExerciseItem>, private va
     }
 
     fun getCurrentReps(): String {
-        return repsString
+        currentreps = currentreps
+        return currentreps
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -70,8 +72,8 @@ class RecyclerAdapter(private var dataSet: MutableList<ExerciseItem>, private va
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         //bind exercise to holder
         val exercise = dataSet[position]
-        holder.bind(exercise)
-        holder.bind(dataSet[position])
+        exercise.reps = getCurrentReps()
+        holder.bind(exercise, position)
     }
 
     override fun getItemCount() = dataSet.size
