@@ -18,6 +18,8 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import edu.quinnipiac.ser210.myapplication.databinding.FragmentHomeBinding
@@ -30,6 +32,8 @@ class HomeFragment : Fragment() {
 
     //stay on home frag
     var isFirstSelection = true
+    val model: ResetSpinnerViewModel by activityViewModels()
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -40,6 +44,17 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = findNavController()
         isFirstSelection = true
+
+        Log.d("LOOKHERE", "calling view model")
+        //avoiding automatic spinner call
+        model.resetEvent.observe(viewLifecycleOwner, Observer { reset ->
+            Log.d("LOOKHERE", "observing view model")
+            if (reset) {
+                Log.d("LOOKHERE", "resetting")
+                resetSpinner()
+                model.resetComplete()  // Notify that reset is handled
+            }
+        })
 
         //spinner selection for body part
         val bodyParts = arrayOf("Select a Body Part", "Back", "Arms", "Legs", "Chest", "Shoulders", "Core")
@@ -58,6 +73,7 @@ class HomeFragment : Fragment() {
                     isFirstSelection = false    //next selection
                     return
                 }
+
 
                     //set item selected to selected body part, pass to all workouts frag & navigate there, log info
                     val selectedBodyPart = parent.getItemAtPosition(position).toString()
@@ -96,6 +112,7 @@ class HomeFragment : Fragment() {
     fun resetSpinner(){
         Log.d("HOMEEEE", "callin the method")
         isFirstSelection = true
+        binding.bodyPartSpinner.setSelection(0)
     }
 
 

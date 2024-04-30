@@ -1,10 +1,10 @@
 package edu.quinnipiac.ser210.myapplication.data
 
-/*
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import edu.quinnipiac.ser210.myapplication.APIData.ExerciseItem
 import org.junit.runner.RunWith
 
 import junit.framework.Assert.assertEquals
@@ -17,48 +17,49 @@ import org.junit.Test
 import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
-class ItemDaoTest {
+class WorkoutDAOTest {
 
 
-    private lateinit var itemDao: ItemDao
-    private lateinit var inventoryDatabase: ItemRoomDatabase
-    private var item1 = Item(1, "Apples", 10.0, 20)
-    private var item2 = Item(2, "Bananas", 15.0, 97)
+
+    private lateinit var workoutDao: WorkoutDao
+    private lateinit var inventoryDatabase: AppDatabase
+    private var item1 = Workout(1, "lunges", "legs", "lunges", "4x10")
+    private var item2 = Workout(2, "push-up", "arms", "push-up", "3x10")
 
     @Before
     fun createDb() {
         val context: Context = ApplicationProvider.getApplicationContext()
         // Using an in-memory database because the information stored here disappears when the
         // process is killed.
-        inventoryDatabase = Room.inMemoryDatabaseBuilder(context, ItemRoomDatabase::class.java)
+        inventoryDatabase = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             // Allowing main thread queries, just for testing.
             .allowMainThreadQueries()
             .build()
-        itemDao = inventoryDatabase.itemDao()
+        workoutDao = inventoryDatabase.workoutDao()
     }
     private suspend fun addOneItemToDb() {
-        itemDao.insert(item1)
+        workoutDao.insertWorkout(item1)
     }
 
     private suspend fun addTwoItemsToDb() {
-        itemDao.insert(item1)
-        itemDao.insert(item2)
+        workoutDao.insertWorkout(item1)
+        workoutDao.insertWorkout(item2)
     }
 
     @Test
     @Throws(Exception::class)
     fun daoInsert_insertsItemIntoDB() = runBlocking {
         addOneItemToDb()
-        val allItems = itemDao.getItems().first()
-        assertEquals(allItems[0], item1)
+        val allItems = workoutDao.getAllWorkouts().first
+        assertEquals(allItems, item1)
     }
     @Test
     @Throws(Exception::class)
     fun daoGetAllItems_returnsAllItemsFromDB() = runBlocking {
         addTwoItemsToDb()
-        val allItems = itemDao.getItems().first()
-        Assert.assertEquals(allItems[0], item1)
-        Assert.assertEquals(allItems[1], item2)
+        val allItems = workoutDao.getAllWorkouts()
+        Assert.assertEquals(allItems, item1)
+        Assert.assertEquals(allItems, item2)
     }
     @After
     @Throws(IOException::class)
@@ -68,4 +69,3 @@ class ItemDaoTest {
 
 }
 
- */
