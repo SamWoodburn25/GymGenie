@@ -3,7 +3,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context="edu.quinnipiac.ser210.myapplication.InformationFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <TextView
+                android:id="@+id/byWho"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Created by Sam Woodburn &amp; Gabby Pierce"
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This app is intended to help users plan and create their own workouts"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/howToUse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="How to use:\n1. Select a body part that you want to work out.\n2. Delete any exercises you do not want from the list.\n3. Push 'Save Workout' when the workout looks as you want.\n4. Name your workout.\n5. Create more workouts!\n6. Check out your saved workouts on the Saved Workouts Page."
+                android:textSize="16sp" />
+        </LinearLayout>
+    </ScrollView>
 </FrameLayout>
