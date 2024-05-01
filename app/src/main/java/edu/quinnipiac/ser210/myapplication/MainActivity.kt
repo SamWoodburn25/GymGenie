@@ -19,6 +19,8 @@ import android.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -29,6 +31,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 class MainActivity : AppCompatActivity() {
 
     lateinit var navController: NavController
+    lateinit var resetSpinnerViewModel: ResetSpinnerViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -49,17 +53,28 @@ class MainActivity : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        resetSpinnerViewModel = ViewModelProvider(this).get(ResetSpinnerViewModel::class.java)
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        //fix navigate back, this isn't working
-        val frag = navController.currentDestination as? HomeFragment
-        frag?.resetSpinner()
+        Log.d("LOOKHERE", "triggering reset")
+        resetSpinnerViewModel.triggerReset()
 
         // Handle normal up navigation
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
+    fun callHomeFragmentMethod() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        val homeFragment = navHostFragment?.childFragmentManager?.fragments?.find { it is HomeFragment } as? HomeFragment
+        if (homeFragment != null) {
+            homeFragment.resetSpinner()
+            Log.d("MAINNNN", "Successfully called resetSpinner on HomeFragment")
+        } else {
+            Log.d("MAINNNN", "not found")
+        }
+    }
 
 
 
