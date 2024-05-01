@@ -50,7 +50,7 @@ class WorkoutDAOTest {
     @Throws(Exception::class)
     fun daoInsert_insertsItemIntoDB() = runBlocking {
         addOneItemToDb()
-        val allItems = workoutDao.getAllWorkouts().first
+        val allItems = workoutDao.getAllWorkouts()
         assertEquals(allItems, item1)
     }
     @Test
