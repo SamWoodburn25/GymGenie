@@ -7,7 +7,6 @@ plugins {
 }
 
 
-
 android {
     namespace = "edu.quinnipiac.ser210.myapplication"
     compileSdk = 34
@@ -46,10 +45,26 @@ android {
 }
 
 dependencies {
-
-    //val roomVersion = "2.4.2" // Define the version at a single place
     val roomVersion = "2.6.1"
+    
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation("androidx.room:room-testing:$roomVersion")
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
 
+    implementation("junit:junit:4.12")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
+    //val roomVersion = "2.4.2" // Define the version at a single place
+
+
+    testImplementation ("androidx.arch.core:core-testing:2.1.0")
+    testImplementation ("androidx.room:room-testing:2.2.5")
+    // JUnit
+    testImplementation ("junit:junit:4.13.2")
+
+    // For LiveData testing
+    testImplementation ("androidx.arch.core:core-testing:2.1.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
@@ -78,6 +93,7 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
+    implementation(kotlin("test"))
 
 
 }

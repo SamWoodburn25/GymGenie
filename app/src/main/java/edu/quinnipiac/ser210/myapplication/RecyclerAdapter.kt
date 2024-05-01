@@ -6,16 +6,12 @@ package edu.quinnipiac.ser210.myapplication
   * recycler adapter: for the all workouts fragment to display the exercise names; xml list_item
  */
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.persistableBundleOf
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import edu.quinnipiac.ser210.myapplication.APIData.ExerciseItem
 import edu.quinnipiac.ser210.myapplication.databinding.ListItemBinding
-import kotlin.random.Random
 
 var currentreps: String = "Reps: "
 
