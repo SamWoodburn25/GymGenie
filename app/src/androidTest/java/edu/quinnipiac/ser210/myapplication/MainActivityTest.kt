@@ -3,6 +3,8 @@ package edu.quinnipiac.ser210.myapplication
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.saveable.autoSaver
+import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
@@ -18,6 +20,7 @@ import androidx.test.filters.LargeTest
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anything
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.TypeSafeMatcher
 import org.junit.Rule
@@ -40,24 +43,24 @@ class MainActivityTest {
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),
-                        0
+                        1
                     ),
-                    0
+                    1
                 ),
                 isDisplayed()
             )
         )
         appCompatSpinner.perform(click())
 
-//        val materialTextView = onData(anything())
-//            .inAdapterView(
-//                childAtPosition(
-//                    withClassName(`is`("android.widget.PopupWindow$saver")),
-//                    0
-//                )
-//            )
-//            .atPosition(1)
-//        materialTextView.perform(click())
+        val materialTextView = onData(anything())
+            .inAdapterView(
+                childAtPosition(
+                    withClassName(`is`("android.widget.PopupWindow")),
+                    1
+                )
+            )
+            .atPosition(2)
+        materialTextView.perform(click())
 
         val materialButton = onView(
             allOf(
