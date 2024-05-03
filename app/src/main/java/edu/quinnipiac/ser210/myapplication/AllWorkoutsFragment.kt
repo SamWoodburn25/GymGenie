@@ -175,4 +175,9 @@ class AllWorkoutsFragment : Fragment(),OnItemRemoved {
 
     }
 
+    fun setViewModel(testViewModel: ExerciseViewModel) {
+        this.viewModel = testViewModel
+    }
+
+
 }

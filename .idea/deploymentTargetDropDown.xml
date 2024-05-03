@@ -2,13 +2,22 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="ExerciseListTest">
+        <State />
+      </entry>
       <entry key="MainActivityTest">
         <State />
       </entry>
-      <entry key="WorkoutDAOTest">
+      <entry key="UnitTest">
         <State />
       </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="mainActivityTest()">
+        <State />
+      </entry>
+      <entry key="test_selectItemAndCheckDetail()">
         <State />
       </entry>
     </value>

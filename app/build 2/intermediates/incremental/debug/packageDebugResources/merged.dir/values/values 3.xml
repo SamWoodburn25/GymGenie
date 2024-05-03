@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="blue">#E5F4FC</color>
+    <color name="green">#E5FCE9</color>
+    <color name="pink">#FCE5F3</color>
+    <color name="purple">#E5E9FC</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">Gym Genie</string>
+    <string name="save">View Saved Workouts</string>
+    <style name="Base.Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+    </style>
+    <style name="Theme.MyApplication" parent="Base.Theme.MyApplication"/>
+</resources>
